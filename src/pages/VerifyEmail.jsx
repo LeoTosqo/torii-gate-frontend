@@ -11,6 +11,18 @@ const VerifyEmail = () => {
   //   const redirect = useNavigate();
   const [errorMsg, setErrorMsg] = useState("");
   const [status, setStatus] = useState("verifying");
+  const [email, setEmail] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const handleResendEmail = async () => {
+    try {
+      const response = await axiosInstance.post("/auth/resend-email", {
+        email,
+      });
+      if (response.status === 200) {
+        setFeedback("Email sent");
+      }
+    } catch (error) {}
+  };
   const checkToken = async () => {
     try {
       const response = await axiosInstance.post(`/auth/verify-email/${token}`, {
@@ -22,6 +34,7 @@ const VerifyEmail = () => {
     } catch (error) {
       setErrorMsg("Email Verification Failed");
       setStatus("error");
+      setEmail(error?.response?.data?.email);
     }
   };
 
@@ -33,10 +46,11 @@ const VerifyEmail = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="w-full max-w-[505px] py-[29px] px-[26px] shadow-md text-center">
-          <BounceLoader className="mx-auto"/>
-          <h1 className="text-xl font-semibold my-3 lg:text[30px]">Email verifying</h1>
+          <BounceLoader className="mx-auto" />
+          <h1 className="text-xl font-semibold my-3 lg:text[30px]">
+            Email verifying
+          </h1>
           <p className="text-[#666]">Please Wait</p>
-          
         </div>
       </div>
     );
@@ -47,7 +61,9 @@ const VerifyEmail = () => {
         <div className="w-full max-w-[505px] py-[29px] px-[26px] shadow-md text-center">
           <img src={Icon} alt="Icon" className="block mx-auto" />
           <h1>verification Successful</h1>
-          <p className="text-[#666] mb-4">Your account has been verified Successfully</p>
+          <p className="text-[#666] mb-4">
+            Your account has been verified Successfully
+          </p>
           <Link to="/login">
             <button className="w-full h-[56px] font-semibold rounded-xl bg-[#0c0c0c] text-white">
               Proceed to Login
@@ -60,14 +76,20 @@ const VerifyEmail = () => {
 
   return (
     <div>
+      5
       <div className="flex items-center justify-center h-screen">
         <div className="w-full max-w-[505px] py-[29px] px-[26px] shadow-md text-center">
-          <MdCancel size={80} className="text-red-500 mx-auto"/>
-          <h1>verification Failed</h1>
-          <p>Invalid or expired Token
+          <MdCancel size={80} className="text-red-500 mx-auto" />
+          <p className="bg-green-100 text-blue-700 py-1.5 px-3 rounded-lg">
+            {feedback}
           </p>
+          <h1>verification Failed</h1>
+          <p>Invalid or expired Token</p>
           <Link to="/login">
-            <button className="w-full h-[56px] font-semibold rounded-xl bg-[#0c0c0c] text-white">
+            <button
+              onClick={handleResendEmail}
+              className="w-full h-[56px] font-semibold rounded-xl bg-[#0c0c0c] text-white"
+            >
               Resend Verification mail
             </button>
           </Link>
