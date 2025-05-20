@@ -19,6 +19,8 @@ const PropertyDetail = lazy(() => import("./pages/PropertyDetail"));
 const Error404 = lazy(() => import("./pages/Error404"));
 const Verification = lazy(() => import("./pages/Verification"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+
 import VerifyEMail from "./pages/VerifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -36,11 +38,11 @@ function App() {
             <Route path="/property/:propertyId" element={<PropertyDetail />} />
           </Route>
 
-          
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/verification" element={<Verification />} />
           <Route path="/verify-email/:token" element={<VerifyEMail />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
 
           <Route element={<ProtectedRoute allowedRoles={["landlord"]} />}>
