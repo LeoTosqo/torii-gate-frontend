@@ -20,6 +20,7 @@ const Error404 = lazy(() => import("./pages/Error404"));
 const Verification = lazy(() => import("./pages/Verification"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
+const CheckYourEmail = lazy (()=> import("./pages/CheckYourEmail"))
 
 import VerifyEMail from "./pages/VerifyEmail";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -44,6 +45,7 @@ function App() {
           <Route path="/verify-email/:token" element={<VerifyEMail />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
+          <Route path="/check-email" element={<CheckYourEmail />} />
 
           <Route element={<ProtectedRoute allowedRoles={["landlord"]} />}>
             <Route path="/dashboard" element={<DashboardLayout />}>

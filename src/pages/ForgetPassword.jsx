@@ -1,25 +1,38 @@
 import React, { useState } from "react";
 import AuthWrapper from "../components/layout/AuthWrapper";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { forgotPasswordSchema } from "../utils/formValidator";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { axiosInstance } from "../utils/axiosInstance";
+import { PiWarningCircle } from "react-icons/pi";
 
 const ForgetPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const redirect = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(forgotPasswordSchema) });
-  const handleForgotPassword = (data) => {
+  const handleForgotPassword = async (data) => {
     setIsSubmitting(true);
     try {
-      console.log(data);
+      const response = await axiosInstance.post("/auth/forgot-password", {
+        ...data,
+      });
+      if (response.status === 200) {
+        localStorage.setItem('email', data.email)
+        //redirect to the page
+        redirect("/check-email");
+      }
     } catch (error) {
       console.log(error);
+      setErrorMessage(error?.response?.data?.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -33,7 +46,7 @@ const ForgetPassword = () => {
         <div className="max-w-[332px] my-5"></div>
         <form onSubmit={handleSubmit(handleForgotPassword)}>
           <label htmlFor="email" className="label">
-            Email<sup className="text-red-500">*</sup>
+            Email<sup className="text-red-500 mb-1.5">*</sup>
           </label>
           <input
             type="email "
@@ -44,6 +57,12 @@ const ForgetPassword = () => {
           />
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          )}
+          {errorMessage && (
+            <div className="w-full rounded-xl py-2 my-2.5 px-4 bg-[#FF37370D] border border-[#ff3737] text-[#ff3737] flex items-center gap-3">
+              <PiWarningCircle size={22} />
+              <p>{errorMessage}</p>
+            </div>
           )}
           <button
             type="submit"
@@ -67,3 +86,4 @@ const ForgetPassword = () => {
 };
 
 export default ForgetPassword;
+  
