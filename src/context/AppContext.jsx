@@ -35,9 +35,12 @@ const AppProvider = ({ children }) => {
 
   //login --- email, password, role
   // setToken() useUser()
-
+const updateUser = (updateUser)=>{
+  setUser(updateUser);
+  localStorage.setItem("user", JSON.stringify(updateUser))
+}
   return (
-    <appContext.Provider value={{ login, logout, user, token, loading }}>
+    <appContext.Provider value={{ login, logout, user, token, loading, updateUser }}>
       {children}
     </appContext.Provider>
   );

@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../utils/formValidator";
 import { axiosInstance } from "../utils/axiosInstance";
-import {useAppContext} from "../hooks/useAppContext"
+import { useAppContext } from "../hooks/useAppContext";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +16,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [role, setRole] = useState("tenant");
   const redirect = useNavigate();
-  const {login} = useAppContext();
+  const { login } = useAppContext();
 
   const {
     register,
@@ -36,11 +36,11 @@ const Login = () => {
       });
 
       console.log(mydata);
-      login (mydata.token, mydata.user);
+      login(mydata.token, mydata.user);
       if (mydata.user.role === "tenant") {
-        redirect("/home")
-      }else{
-        redirect("dashboard");
+        redirect("/home");
+      } else {
+        redirect("/dashboard");
       }
 
       setErrorMessage("");

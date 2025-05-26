@@ -19,10 +19,10 @@ const DashboardLayout = () => {
     redirect("/login");
   };
 
-  const extractFirstName = (name)=>{
+  const extractFirstName = (name) => {
     //ade test
-    return name.split(' ')[0]
-  }
+    return name.split(" ")[0];
+  };
   // Check screen size and toggle sidebar accordingly
   useEffect(() => {
     const handleResize = () => {
@@ -143,13 +143,16 @@ const DashboardLayout = () => {
           <nav className="flex bg-white py-3 px-4 items-center justify-between sticky top-0 z-10">
             <div>
               <h1 className="font-light text-xl">
-                Welcome Back, <span className="font-medium">{extractFirstName(user.fullName) }</span>
+                Welcome Back,{" "}
+                <span className="font-medium">
+                  {extractFirstName(user.fullName)}
+                </span>
               </h1>
             </div>
             <div className="flex items-center space-x-4 relative">
               <div className="  flex items-center justify-center gap-2.5">
                 <img
-                  src={user.email}
+                  src={user.profilePicture}
                   alt="pic"
                   className="rounded-full object-cover h-9 w-9"
                 />
@@ -158,7 +161,7 @@ const DashboardLayout = () => {
                     {user.fullName}
                   </h2>
                   <p className="hidden md:block text-[#666666] font-light">
-                  {user.email}
+                    {user.email}
                   </p>
                 </div>
                 <button
@@ -173,7 +176,10 @@ const DashboardLayout = () => {
                 </button>
               </div>
               {showLogout && (
-                <button className="absolute btn bg-red-500 text-white top-16 right-4 z-10">
+                <button
+                  onClick={handleLogout}
+                  className="absolute btn bg-red-500 text-white top-16 right-4 z-10"
+                >
                   Logout
                 </button>
               )}
