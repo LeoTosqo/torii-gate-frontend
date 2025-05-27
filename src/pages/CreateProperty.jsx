@@ -16,7 +16,7 @@ const CreateProperty = () => {
           <h3 className="text-black">Create new property</h3>
         </div>
       </div>
-      <form className="mx-auto rounded-lg p-5 border border-[#F6F6F6]"></form>
+      
       <CreateForm />
     </div>
   );
