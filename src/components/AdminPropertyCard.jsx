@@ -4,6 +4,9 @@ import { MdOutlineBathtub } from "react-icons/md";
 import { LiaBedSolid } from "react-icons/lia";
 import { TbToolsKitchen } from "react-icons/tb";
 import { FaEllipsis } from "react-icons/fa6";
+import { axiosInstance } from "../utils/axiosInstance";
+import { useAppContext } from "../hooks/useAppContext";
+import { toast } from "react-toastify";
 
 const AdminPropertyCard = ({
   _id,
@@ -17,15 +20,29 @@ const AdminPropertyCard = ({
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(availability);
+  const { token } = useAppContext()
 
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
   };
 
-  const handleStatusChange = (newStatus) => {
+  const handleStatusChange = async (newStatus, propertyId) => {
     setCurrentStatus(newStatus);
     setShowDropdown(false);
     //trigger api call here
+
+    try {
+      const response = await axiosInstance.patch(
+        `/property/landlord/${propertyId}`,
+        { availability: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (response.status === 200) {
+        toast.success("Status Updated Successfully")
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const statusStyle =
@@ -51,7 +68,7 @@ const AdminPropertyCard = ({
           <h1 className="font-medium text-[15px] text-[#0c0c0c]">{title}</h1>
           <p className="flex items-center gap-2 font-medium text-[#666] text-sm mb-2">
             <FaMapMarkerAlt className="hidden lg:block" />
-            {location }
+            {location}
           </p>
           <div className="flex items-center gap-[22px] text-[#363636] text-sm flex-wrap">
             <p className="flex items-center gap-2">
@@ -75,13 +92,13 @@ const AdminPropertyCard = ({
         {showDropdown && (
           <div className="absolute top-8 right-0 bg-white border rounded-md shadow-md z-10">
             <button
-              onClick={() => handleStatusChange("rented")}
+              onClick={() => handleStatusChange("rented", _id)}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >
               Rented
             </button>
             <button
-              onClick={() => handleStatusChange("available")}
+              onClick={() => handleStatusChange("available", _id)}
               className="block w-full text-left px-4 py-2 hover:bg-gray-100"
             >
               Available

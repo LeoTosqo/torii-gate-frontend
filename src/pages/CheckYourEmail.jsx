@@ -8,7 +8,7 @@ const CheckYourEmail = () => {
   const email = localStorage.getItem("email");
   const maskEmail = (email) => {
     const [start, domain] = email.split("@");
-    if (start.lenght <= 2) {
+    if (start.length <= 2) {
       return `${start[0]}...@${domain}`;
     }
     return `${start.slice(0, 2)}...@${domain}`;
