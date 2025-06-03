@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { properties } from "../data";
 import FeaturedPropertyCard from "./FeaturedPropertyCard";
 
-const SimilarProperty = () => {
+const SimilarProperty = ({similar}) => {
   return (
     <div className="py-10 layout">
       <div className="flex items-center justify-between">

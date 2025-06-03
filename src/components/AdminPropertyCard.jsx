@@ -7,6 +7,8 @@ import { FaEllipsis } from "react-icons/fa6";
 import { axiosInstance } from "../utils/axiosInstance";
 import { useAppContext } from "../hooks/useAppContext";
 import { toast } from "react-toastify";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import DeleteModel from "./DeleteModel";
 
 const AdminPropertyCard = ({
   _id,
@@ -20,7 +22,8 @@ const AdminPropertyCard = ({
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(availability);
-  const { token } = useAppContext()
+  const [showmodal, setShowModal] = useState(false);
+  const { token } = useAppContext();
 
   const toggleDropdown = () => {
     setShowDropdown((prev) => !prev);
@@ -30,15 +33,34 @@ const AdminPropertyCard = ({
     setCurrentStatus(newStatus);
     setShowDropdown(false);
     //trigger api call here
-
     try {
       const response = await axiosInstance.patch(
         `/property/landlord/${propertyId}`,
         { availability: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: { Authorization: `Bearer ${token} ` },
+        }
       );
       if (response.status === 200) {
-        toast.success("Status Updated Successfully")
+        toast.success("status updated successfully");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDelete = async (propertyId) => {
+    try {
+      const response = await axiosInstance.delete(
+        `/property/landlord/${propertyId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        toast.success("property deleted successfully");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       console.log(error);
@@ -52,6 +74,7 @@ const AdminPropertyCard = ({
 
   return (
     <div className="bg-white rounded-lg flex items-center justify-between p-2.5">
+      {/* {showmodal && <DeleteModal setShowModal={setShowModal}/>} */}
       <div className="flex items-center gap-2 relative">
         <img
           src={images[0]}
@@ -85,9 +108,14 @@ const AdminPropertyCard = ({
       </div>
 
       <div className="flex flex-col gap-[22px] items-end relative">
-        <button onClick={toggleDropdown} className="cursor-pointer">
-          <FaEllipsis />
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="cursor-pointer" onClick={() => handleDelete(_id)}>
+            <RiDeleteBin6Line />
+          </button>
+          <button onClick={toggleDropdown} className="cursor-pointer">
+            <FaEllipsis />
+          </button>
+        </div>
 
         {showDropdown && (
           <div className="absolute top-8 right-0 bg-white border rounded-md shadow-md z-10">

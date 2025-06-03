@@ -17,7 +17,8 @@ const FeaturedPropertyCard = ({
 }) => {
   return (
     <Link
-      // to={`/property/${_id}`}
+    
+      to={`/property/${_id}`}
       className="w-full block lg:w-[325px] xl:w-[400px] h-[285px] mt-8"
     >
       <img
