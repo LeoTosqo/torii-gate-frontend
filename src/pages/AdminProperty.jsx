@@ -8,51 +8,57 @@ import { axiosInstance } from "../utils/axiosInstance";
 import SuspenseLoader from "../components/SuspenseLoader";
 import { useState, useEffect } from "react";
 import { useAppContext } from "../hooks/useAppContext";
-import {  EmptyLandlord} from "../components/EmptyLandlord";
+import EmptyLandlord from "../components/EmptyLandlord";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const AdminProperty = () => {
+  const redirect = useNavigate();
   const [isLoading, SetisLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [properties, setProperties] = useState([]);
   const [total, setTotal] = useState(0);
   const [totalpages, setTotalPages] = useState(0);
-  const [available, setAvailable]=useState(0)
-  const [rented, setRented]=useState(0)
+  const [available, setAvailable] = useState(0);
+  const [rented, setRented] = useState(0);
 
   const { token } = useAppContext();
   const fetchProperties = async () => {
     try {
-      const { data } = await axiosInstance.get(
+      const response = await axiosInstance.get(
         `/property/landlord?page= ${page}`,
         {
-          headers: { Authorization: `Bearer ${token} `},
+          headers: { Authorization: `Bearer ${token} ` },
         }
       );
+      const { data } = response;
       console.log(data);
 
       setProperties(data.properties);
       setPage(data.currentPage);
       setTotalPages(data.totalPages);
       setTotal(data.total);
-      setAvailable(data.availableProperties)
-      setRented(data.rentedProperties)
+      setAvailable(data.availableProperties);
+      setRented(data.rentedProperties);
       SetisLoading(false);
+      if (response.status === 401) {
+        toast.warning("session expired");
+        redirect("/login");
+      }
     } catch (error) {
       console.log(error);
     }
   };
-   useEffect(() => {
-      fetchProperties();
-    }, [page]);
-  
-    if (isLoading) {
-      return <SuspenseLoader />;
-    }
-    if (!isLoading && total === 0) {
-      return (
-      <EmptyLandlord/>
-      );
-    }
+  useEffect(() => {
+    fetchProperties();
+  }, [page]);
+
+  if (isLoading) {
+    return <SuspenseLoader />;
+  }
+  if (!isLoading && total === 0) {
+    return <EmptyLandlord />;
+  }
   return (
     <div>
       <div className="flex items-center justify-between my-5">
@@ -80,7 +86,9 @@ const AdminProperty = () => {
       </div>
       <div className="flex flex-col gap-3.5 lg:flex-row items-center mt-6 mb-10">
         <div className="w-full lg:w-[274.25px] ">
-          <h2 className="pl-3.5 mb-3 font-medium text-[16px] text-[#666]">Total Properties</h2>
+          <h2 className="pl-3.5 mb-3 font-medium text-[16px] text-[#666]">
+            Total Properties
+          </h2>
           <div className="w-full bg-white rounded-lg flex items-center h-[80px] pl-3.5">
             <h1 className="font-semibold text-2xl">{total}</h1>
           </div>
